@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Reserva do Prato</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    .formulario {
+      margin-bottom: 20px;
+    }
+    #prato {
+      display: none;
+      margin-top: 30px;
+    }
+    img {
+      width: 300px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Reserva do Prato nº1</h2>
+  <div class="formulario">
+    <label for="nome">O teu nome:</label><br>
+    <input type="text" id="nome" required><br><br>
+
+    <label for="dia">Dia da semana em que queres consumir:</label><br>
+    <select id="dia" required>
+      <option value="">-- Seleciona --</option>
+      <option value="Segunda">Segunda</option>
+      <option value="Terça">Terça</option>
+      <option value="Quarta">Quarta</option>
+      <option value="Quinta">Quinta</option>
+      <option value="Sexta">Sexta</option>
+    </select><br><br>
+
+    <button onclick="submeter()">Ver Prato</button>
+    <button onclick="cancelar()">Cancelar</button>
+  </div>
+
+  <div id="prato">
+    <h3>🍗 Frango Assado</h3>
+    <img src="https://www.receitasnestle.com.br/sites/default/files/styles/recipe_detail_desktop/public/srh_recipes/f1c48d57e91bc4733a3a46c61e97063f.webp" alt="Frango Assado">
+  </div>
+
+  <script>
+    function submeter() {
+      const nome = document.getElementById('nome').value.trim();
+      const dia = document.getElementById('dia').value;
+      const prato = "1"; // Prato nº1
+
+      if (!nome || !dia) {
+        alert("Preenche todos os campos!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("nome", nome);
+      formData.append("prato", prato);
+      formData.append("dia", dia);
+
+      fetch("https://script.google.com/macros/s/AKfycbwRZUTv4-2vWc1PrHFVTbbphJMdMNHXuJ5TFFbICw9LUDIinUbhXkziv6dTiPXhCf5d/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        if (data === "OK") {
+          document.querySelector(".formulario").style.display = "none";
+          document.getElementById("prato").style.display = "block";
+        } else {
+          alert("Erro ao enviar. Tenta novamente.");
+        }
+      })
+      .catch(error => {
+        alert("Erro ao enviar. Verifica a ligação.");
+        console.error(error);
+      });
+    }
+
+    function cancelar() {
+      document.getElementById("nome").value = "";
+      document.getElementById("dia").value = "";
+    }
+  </script>
+
+</body>
+</html>
+
+
